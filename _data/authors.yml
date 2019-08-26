@@ -1,0 +1,8 @@
+Park Hongryeal:
+  name        : "박홍렬"
+  bio         : "공부하자"
+  avatar      : "/assets/images/profile.jpg"
+  links:
+    - label: "Github"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/parkhr"

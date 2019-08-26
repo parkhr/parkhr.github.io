@@ -1,0 +1,130 @@
+---
+published: true
+layout: single
+title: "03.프로세스 관리"
+category:
+  - operating system
+date : 2019-08-03 17:30:00
+---
+
+## ***process vs program*** 
+
+- process란 메인 메모리에 올라와서 실행되는 것 을 말한다.
+- Program 은 하드디스크 안에 있는 프로그램들을 말하며, 아무일도 하지 않는다.
+
+<br/>
+
+프로세스의 과정
+
+new (메모리로 올린다.) -> ready(실행할 준비) -> running(cpu에 의해 실행중) -> waiting(I/O 수행) -> terminate(프로그램 종료)
+
+<br/>
+
+<br/>
+
+## PCB( process control block) 이란
+
+- os  안에 존재한다.
+- process 당 1개씩 존재한다.
+- process의 모든 정보가 들어 있다. -> 현재 상태를 저장한다.
+- process의 정보에는
+  - Process state(running, ready, waiting …)
+  - PC
+  - Registers
+  - MMU Info ( base, limit)
+  - CPU time
+  - process IO
+  - list of open files( 어떤 파일을 사용하고 있는지..)
+
+<br/><br/>
+
+## Queue
+
+- 하드디스크에서 메인메모리로 가는 Job Queue, Job scheduler
+- 메인메모리에서 CPU로 가는 Ready Queue, CPU scheduler
+- CPU 에서 IO로 가는  Device Queue, Device scheduler
+
+<br/>
+
+### Job Queue, Job scheduler
+
+프로세스가 하드디스크에서 메인메모리로 가기위해서는 우선 메인메모리에서 메모리가 비어있어야 한다.
+
+메모리가 비기 위해서는 원래부터 메모리가 비어있거나, 메모리를 차지하고 있던 프로세스가 종료하게 되어 메모리가 비는 상황이 있다.
+
+자주 일어나지 않기 때문에 ***long term*** 이라고도 부른다. (몇분 간격)
+
+<br/>
+
+### Ready Queue, CPU scheduler
+
+Multi programming 에서 어떤 Process를 CPU로 올릴 것 인지 정하는 곳이다.
+
+계속해서 빠르게 스위칭을 해야하기 때문에 ***short-term*** 라고 부르기도 한다.
+
+<br/><br/>
+
+Multi programming : main memory에 여러개의 프로세스를 실행
+
+I/O - bound process : 주로 입출력을 많이 수행하는 프로세스 ex) 워드프로세스, 문서편집프로그램
+
+CPU - bound process : 주로 CPU를 사용하는 프로세스 ex) 일기예보 프로그램
+
+***Job sheduler 는 I/O, CPU 를 적절히 mix 해서 올리는 작업을 한다*** 
+
+<br/><br/>
+
+### Medium-term scheduler
+
+=> OS 가 메모리를 지켜보고 있다가 어느 프로세스를 제거해야 되는지 결정하는것
+
+ex) 메인메모리에 A, B, C 라는 프로세스가 올라와있다. B가 커피를 마시러 갔는데 메모리는 계속 사용중 -> 비효율
+
+​      OS가 감시하고 있다가 B가 아무일을 하지 않고 있다는 것을 감지하게 되면 B를 제거하고 디스크로 보낸다.
+
+​      다른 프로그램을 올리거나 A,C의 프로세스에게 메모리를 더 할당한다.
+
+​      그러다가 B가 다시 동작하게 되면 디스크에서 메인메모리로 올라간다.
+
+<br/><br/>
+
+### Context switching (문맥 전환)
+
+P1 의 프로세스 코드를 쭉 읽다가 P2의 코드 부분으로 switching 하는것
+
+Dispatcher : scheduler 가 선택한 프로그램을 실행하도록 여러가지 상태나 레지스터 값을 변경한다.
+
+ex) P1에서 P2로 넘어가려면 P1의 현재 상태를 PCB에 저장하고, P2의 PCB에 저장된 상태를 복원한다.
+
+<br/><br/>
+
+## CPU 스케줄링
+
+- 선점 : 프로세스가 실행되고 있는데 아직 끝나지 않았고, I/O를 만난것도 아닌데 강제로 스케줄링 하는 것
+
+- 비선점 : 프로세스가 끝나거나, I/O를 만나야지만 스케줄링
+
+<br/><br/>
+
+## CPU Scheduling Algorithms
+
+- FCFS( First - Come, First - Served)
+- SJF( Shortest - Job - First)
+- Non - preemptive SJF( 비선점 SJF)
+- preemptive SJF( 선점 SJF)
+- Priority Scheduling ( 우선순위 위주 작업)
+- AWT (Average Wating Time)
+- Round - Robin scheduling 
+- Multilevel Queue Scheduling (여러 줄)
+- Multilevel Feedback Queue Scheduling (복수개의 Queue, 다른 Queue로의 점진적 이동) 
+
+<br/><br/>
+
+## 프로세스 생성과 종료
+
+프로세스는 프로세스의 의해 만들어 진다.
+
+1. OS초기화 작업을 끝낸 후 첫번째 process를 만든다 ( init )
+2. init 이 또 다른 process 를 만든다.
+3. process 들이 tree 형태로 구성 된다. (parent process, child process), 부모가 같은 process => sibling process
+4. PID -> 프로세스의 구별 아이디 , PPID -> PID의 부모
