@@ -3,6 +3,4 @@ main:
   - title: "Categories"
     url: /categories/
   - title: "About"
-    url: /about/ 
-  - title: "algorithm"
-    url: /algorithm
+    url: /about/
